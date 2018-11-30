@@ -1,5 +1,6 @@
 // login,registerModule
 const express = require('express')
+const bcrypt = require('bcryptjs')
 const router = express.Router();
 const User = require('../../models/user')
 
@@ -22,14 +23,25 @@ router.post('/register', (req, res) => {
         return res.status(400).json({ email: 'email is exist!' })
       } else {
         const newUser = new User(req.body)
-        newUser.save(err => {
-          if (err) {
-            console.log(err);
-            res.status(404).json({ msg: 'Add Failed!' })
-          } else {
-            res.json({ msg: 'Add Success!' })
-          }
-        })
+        let saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+          bcrypt.hash(newUser.password, salt, function (err, hash) {
+            if (err) {
+              console.log(err);
+              return;
+            } else {
+              newUser.password = hash
+              newUser.save(err => {
+                if (err) {
+                  console.log(err);
+                  res.status(404).json({ msg: 'Add Failed!' })
+                } else {
+                  res.json({ msg: 'Add Success!' })
+                }
+              })
+            }
+          });
+        });
       }
     }
   )
