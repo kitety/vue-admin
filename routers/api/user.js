@@ -2,7 +2,10 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const router = express.Router();
+const gravatar = require('gravatar');
 const User = require('../../models/user')
+const jwt = require('jsonwebtoken');
+const secretOrKey = require('../../config/keys').secretOrKey
 
 // $router GET /api/user/test
 // @desc 返回请求的json数据
@@ -22,7 +25,13 @@ router.post('/register', (req, res) => {
       if (user) {
         return res.status(400).json({ email: 'email is exist!' })
       } else {
-        const newUser = new User(req.body)
+        var avatar = gravatar.url(req.body.email, { s: '200', r: 'pg', d: 'mm' });
+        const newUser = new User({
+          email: req.body.email,
+          name: req.body.name,
+          password: req.body.password,
+          avatar
+        })
         let saltRounds = 10;
         bcrypt.genSalt(saltRounds, function (err, salt) {
           bcrypt.hash(newUser.password, salt, function (err, hash) {
@@ -45,6 +54,34 @@ router.post('/register', (req, res) => {
       }
     }
   )
+})
+
+// $router POST /api/user/login
+// @desc 返回token jwt
+// @access public
+router.post('/login', (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  User.findOne({ email }).then(user => {
+    if (!user) {
+      res.status(404).json({ email: "User is not register" })
+      return
+    }
+    // 密码匹配
+    bcrypt.compare(password, user.password, function (err, result) {
+      if (result == true) {
+        const rule = {
+          id: user.id,
+          name: user.name
+        }
+        // 数据 加密秘钥 过期时间
+        const token = jwt.sign(rule, secretOrKey, { expiresIn: 3600 })
+        res.json({ msg: "Login success", token:'token '+token })
+      } else {
+        res.status(400).json({ msg: "Password is not match" })
+      } 
+    });
+  })
 })
 
 module.exports = router

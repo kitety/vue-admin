@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 var bodyParser = require('body-parser')
 
-//users 
+//users
 const router = require('./routers/api/user')
 //require mongodbURI
 const db = require('./config/keys').mongoLocalURI
