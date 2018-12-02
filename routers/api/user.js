@@ -11,9 +11,9 @@ const passport = require('passport')
 // $router GET /api/user/test
 // @desc 返回请求的json数据
 // @access public
-router.get('/test', (req, res) => {
-  res.json({ msg: 'User Login' })
-})
+// router.get('/test', (req, res) => {
+//   res.json({ msg: 'User Login' })
+// })
 
 // $router POST /api/user/register
 // @desc 返回请求的json数据
@@ -31,6 +31,7 @@ router.post('/register', (req, res) => {
           email: req.body.email,
           name: req.body.name,
           password: req.body.password,
+          identity: req.body.identity,
           avatar
         })
         let saltRounds = 10;
@@ -41,13 +42,10 @@ router.post('/register', (req, res) => {
               return;
             } else {
               newUser.password = hash
-              newUser.save(err => {
-                if (err) {
-                  console.log(err);
-                  res.status(404).json({ msg: 'Add Failed!' })
-                } else {
-                  res.json({ msg: 'Add Success!' })
-                }
+              newUser.save().then(user => {
+                res.json(user)
+              }).catch(err => {
+                res.json(err)
               })
             }
           });
@@ -69,11 +67,13 @@ router.post('/login', (req, res) => {
       return
     }
     // 密码匹配
-    bcrypt.compare(password, user.password, function (err, result) {
-      if (result == true) {
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
         const rule = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          identity: user.identity,
+          avatar: user.avatar
         }
         // 数据 加密秘钥 过期时间
         const token = jwt.sign(rule, secretOrKey, { expiresIn: 3600 })
@@ -94,6 +94,7 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     id: req.user.id,
     email: req.user.email,
     name: req.user.name,
+    identity: req.user.identity,
     avatar: req.user.avatar
   })
 })
