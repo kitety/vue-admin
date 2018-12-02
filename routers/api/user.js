@@ -6,6 +6,7 @@ const gravatar = require('gravatar');
 const User = require('../../models/user')
 const jwt = require('jsonwebtoken');
 const secretOrKey = require('../../config/keys').secretOrKey
+const passport = require('passport')
 
 // $router GET /api/user/test
 // @desc 返回请求的json数据
@@ -76,11 +77,24 @@ router.post('/login', (req, res) => {
         }
         // 数据 加密秘钥 过期时间
         const token = jwt.sign(rule, secretOrKey, { expiresIn: 3600 })
-        res.json({ msg: "Login success", token:'token '+token })
+        res.json({ msg: "Login success", token: 'Bearer ' + token })
       } else {
         res.status(400).json({ msg: "Password is not match" })
-      } 
+      }
     });
+  })
+})
+
+// $router GET /api/user/current
+// @desc 返回 user
+// @access private
+// 验证token
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({
+    id: req.user.id,
+    email: req.user.email,
+    name: req.user.name,
+    avatar: req.user.avatar
   })
 })
 

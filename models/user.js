@@ -22,5 +22,5 @@ const UserSchema =  mongoose.Schema({
     default: Date.now
   }
 });
-// 注意本地collection的是复数的users
-let User = module.exports = mongoose.model('User', UserSchema);
+// 注意本地collection  users
+let User = module.exports = mongoose.model('users', UserSchema);

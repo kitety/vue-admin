@@ -1,7 +1,7 @@
 {
   "name": "vue-admin",
   "version": "1.0.0",
-  "description": "",
+  "description": "vue-admin",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -16,7 +16,9 @@
     "express": "^4.16.4",
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.3.14"
+    "mongoose": "^5.3.14",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.7"
