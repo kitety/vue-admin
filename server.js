@@ -4,7 +4,8 @@ const passport = require('passport');
 var bodyParser = require('body-parser')
 
 //users
-const router = require('./routers/api/user')
+const User = require('./routers/api/user')
+const Profile = require('./routers/api/profile')
 //require mongodbURI
 const db = require('./config/keys').mongoLocalURI
 // connect mongodb
@@ -29,7 +30,9 @@ app.use(passport.initialize());
 // })
 app.use(urlencodedParser)
 app.use(jsonParser)
-app.use('/api/user', router)
+// 只用router
+app.use('/api/user', User)
+app.use('/api/profile', Profile)
 app.listen(port, () => {
   console.log('The server is Running on ' + port);
 })
