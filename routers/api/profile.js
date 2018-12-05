@@ -42,6 +42,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     return res.status(400).json(err)
   });
 })
+
 // $router GET /api/profile/:id
 // @desc 获取单个信息
 // @access private
@@ -58,4 +59,40 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), (req, res) 
   });
 })
 
+// $router POST /api/profile/edit
+// @desc 编辑信息
+// @access private
+router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const profileFields = {}
+  if (req.body.type) profileFields.type = req.body.type
+  if (req.body.describe) profileFields.describe = req.body.describe
+  if (req.body.income) profileFields.income = req.body.income
+  if (req.body.expend) profileFields.expend = req.body.expend
+  if (req.body.cash) profileFields.cash = req.body.cash
+  if (req.body.remark) profileFields.remark = req.body.remark
+  Profile.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: profileFields },
+    { new: true }
+  ).then((result) => {
+    return res.json(result)
+  }).catch((err) => {
+    return res.status(400).json(err)
+  });
+})
+
+// $router DELETE /api/profile/delete:id
+// @desc 删除信息
+// @access private
+router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Profile.findByIdAndRemove(
+    { _id: req.params.id }
+  ).then((profile) => {
+    profile.save().then((result) => {
+      return res.json(result)
+    })
+  }).catch((err) => {
+    return res.status(400).json({ msg: 'Delete Failed.' })
+  });
+})
 module.exports = router
