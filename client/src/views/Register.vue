@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button @click="resetForm('rigisterForm')" class="submit-btn" type="primary">注册</el-button>
+            <el-button @click="submitForm('rigisterForm')" class="submit-btn" type="primary">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -41,6 +41,13 @@ export default {
   name: 'register',
   components: {},
   data () {
+    var validatePass = (rule, value, callback) => {
+      if (value !== this.registerUser.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       registerUser: {
         name: '',
@@ -48,7 +55,37 @@ export default {
         password: '',
         password2: '',
         identity: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          { min: 2, max: 30, message: '长度在2~30个字符之间', trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', required: true, message: '邮箱格式不正确', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { min: 6, max: 30, message: '长度在2~30个字符之间', trigger: 'blur' }
+        ],
+        password2: [
+          { required: true, message: '确认密码不能为空', trigger: 'blur' },
+          { min: 6, max: 30, message: '长度在2~30个字符之间', trigger: 'blur' },
+          { validator: validatePass, trigger: 'blur' }
+        ]
       }
+    }
+  },
+  methods: {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          alert('错误的提交!!')
+          return false
+        }
+      })
     }
   }
 }
