@@ -1,17 +1,57 @@
 <template>
   <div class="register">
     <section class="form-container">
-      <div class="nanage-tip">
+      <div class="manage-tip">
         <span class="title">在线后台管理系统</span>
+        <el-form
+          :model="registerUser"
+          :rules="rules"
+          class="register-Form"
+          label-width="80px"
+          ref="rigisterForm"
+        >
+          <el-form-item label="用户名" prop="name">
+            <el-input placeholder="请输入用户名" type="text" v-model="registerUser.name"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input placeholder="请输入邮箱" type="email" v-model="registerUser.email"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input placeholder="请输入密码" type="password" v-model="registerUser.password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="password2">
+            <el-input placeholder="请确认密码" type="password" v-model="registerUser.password2"></el-input>
+          </el-form-item>
+          <el-form-item label="选择身份" prop="password2">
+            <el-select placeholder="请选择身份" v-model="registerUser.identity">
+              <el-option label="管理员" value="manager"></el-option>
+              <el-option label="员工" value="employee"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="resetForm('rigisterForm')" class="submit-btn" type="primary">注册</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </section>
   </div>
 </template>
 <script>
 export default {
-  name: "register",
-  components: {}
-};
+  name: 'register',
+  components: {},
+  data () {
+    return {
+      registerUser: {
+        name: '',
+        email: '',
+        password: '',
+        password2: '',
+        identity: ''
+      }
+    }
+  }
+}
 </script>
 <style lang="stylus" scoped>
 .register
@@ -34,6 +74,12 @@ export default {
       font-weight bold
       font-size 26px
       color #fff
+    .register-Form
+      margin-top 20px
+      background-color #ffffff
+      padding 20px 40px 20px 20px
+      border-radius 5px
+      box-shadow 0px 5px 10px #ccc
+      .submit-btn
+        width 100%
 </style>
-
-
