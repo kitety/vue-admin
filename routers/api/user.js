@@ -76,7 +76,7 @@ router.post('/login', (req, res) => {
           avatar: user.avatar
         }
         // 数据 加密秘钥 过期时间
-        const token = jwt.sign(rule, secretOrKey, { expiresIn: 3600 })
+        const token = jwt.sign(rule, secretOrKey, { expiresIn: 10 })
         res.json({ msg: "Login success", token: 'Bearer ' + token })
       } else {
         res.status(400).json({ msg: "Password is not match" })
