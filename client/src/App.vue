@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import jwt_decode from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import isEmpty from 'lodash/isEmpty'
 export default {
   name: 'app',
@@ -13,7 +13,7 @@ export default {
   created () {
     if (localStorage.eleToken) {
       // 解析token
-      const decoded = jwt_decode(localStorage.eleToken);
+      const decoded = jwtDecode(localStorage.eleToken)
       // token存储
       this.$store.dispatch('setAuthenticated', !isEmpty(decoded))
       this.$store.dispatch('setUser', decoded)

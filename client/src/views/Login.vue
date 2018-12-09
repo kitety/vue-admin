@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import jwt_decode from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import isEmpty from 'lodash/isEmpty'
 export default {
   name: 'login',
@@ -63,17 +63,17 @@ export default {
               message: '账号登录成功',
               type: 'success'
             })
-            //存储token
+            // 存储token
             const { token } = result.data
             localStorage.setItem('eleToken', token)
             // 解析token
-            const decoded = jwt_decode(token);
+            const decoded = jwtDecode(token)
             // token存储
-            this.$store.dispatch('setAuthenticated',!isEmpty(decoded))
-            this.$store.dispatch('setUser',decoded)
+            this.$store.dispatch('setAuthenticated', !isEmpty(decoded))
+            this.$store.dispatch('setUser', decoded)
             this.$router.push('/index')
           }).catch((err) => {
-            throw err
+            console.dir(err)
             // 注册失败
             this.$message({
               message: '账号登录失败',
@@ -86,14 +86,6 @@ export default {
           return false
         }
       })
-    },
-    isEmpty (value) {
-      return (
-        value === undeifned ||
-        value === null ||
-        (typeof value === "object" && Object.keys(value).length === 0) ||
-        (typeof value === "string" && value.trim().length === 0)
-      )
     }
   }
 }

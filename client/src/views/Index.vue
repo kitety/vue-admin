@@ -1,10 +1,15 @@
 <template>
-  <div class="index">初始化首页</div>
+  <div class="index">
+    <HeadNav></HeadNav>
+  </div>
 </template>
 <script>
+import HeadNav from '../components/HeadNav'
 export default {
   name: 'index',
-  components: {}
+  components: {
+    HeadNav
+  }
 }
 </script>
 <style lang="stylus" scoped>
