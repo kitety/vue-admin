@@ -52,7 +52,7 @@ export default {
       }
     },
     showInfoList () {
-      console.log('showInfoList')
+      this.$router.push('/infoshow')
     },
     logout () {
       // 清除token

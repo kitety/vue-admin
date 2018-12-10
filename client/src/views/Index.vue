@@ -1,6 +1,7 @@
 <template>
   <div class="index">
     <HeadNav></HeadNav>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -13,4 +14,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+.index
+  height 100%
+  overflow hidden
 </style>
