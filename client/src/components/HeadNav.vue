@@ -7,13 +7,25 @@
       </el-col>
       <el-col :span="6" class="user">
         <div class="userinfo">
-          <img alt class="avatar" src="https://user-gold-cdn.xitu.io/2018/9/16/165e132647eca15f?w=1132&h=559&f=png&s=205082">
+          <img
+            alt
+            class="avatar"
+            src="https://user-gold-cdn.xitu.io/2018/9/16/165e132647eca15f?w=1132&h=559&f=png&s=205082"
+          >
           <div class="welcome">
             <p class="name comename">欢迎</p>
-            <p class="name avatarname">xxxx</p>
+            <p class="name avatarname">{{user.name}}</p>
           </div>
           <span class="username">
-            <!-- 下拉箭头 -->
+            <el-dropdown @command="setDialogInfo" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="info">个人信息</el-dropdown-item>
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </span>
         </div>
       </el-col>
@@ -22,7 +34,38 @@
 </template>
 <script>
 export default {
-  name: 'head-nav'
+  name: 'head-nav',
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
+  methods: {
+    setDialogInfo (command) {
+      switch (command) {
+        case 'info':
+          this.showInfoList()
+          break
+        default:
+          this.logout()
+          break
+      }
+    },
+    showInfoList () {
+      console.log('showInfoList')
+    },
+    logout () {
+      // 清除token
+      localStorage.removeItem('eleToken')
+      // 设置vuex
+      this.$store.dispatch('clearCurrentState')
+      this.$router.push('/login')
+      this.$message({
+        message: '账号退出成功',
+        type: 'success'
+      })
+    }
+  }
 }
 </script>
 <style lang="stylus" scoped>
@@ -75,4 +118,6 @@ export default {
       .username
         cursor pointer
         margin-right 5px
+        .el-icon-arrow-down
+          color #fff
 </style>
