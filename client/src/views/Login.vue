@@ -98,29 +98,30 @@ export default {
   background url('../assets/bg.jpg') no-repeat center center
   background-size 100% 100%
   .form-container
+    box-width = 420px
     width 370px
     height 210px
     position absolute
-    top 10%
-    left 34%
+    top 130px
+    left "calc(50% - %s)" % (box-width/2)
     padding 25px
     border-radius 5px
     text-align center
-    .title
-      font-family 'Microsoft YaHei'
-      font-weight bold
-      font-size 26px
-      color #fff
-    .login-Form
-      margin-top 20px
-      background-color #ffffff
-      padding 20px 40px 20px 20px
-      border-radius 5px
-      box-shadow 0px 5px 10px #ccc
-      .submit-btn
-        width 100%
-      .tiparea
-        text-align right
-        a
-          color #409eff
+  .title
+    font-family 'Microsoft YaHei'
+    font-weight bold
+    font-size 26px
+    color #fff
+  .login-Form
+    margin-top 20px
+    background-color #ffffff
+    padding 20px 40px 20px 20px
+    border-radius 5px
+    box-shadow 0px 5px 10px #ccc
+    .submit-btn
+      width 100%
+    .tiparea
+      text-align right
+      a
+        color #409eff
 </style>
