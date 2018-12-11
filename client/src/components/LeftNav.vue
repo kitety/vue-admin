@@ -13,14 +13,14 @@
             <span slot="title">首页</span>
           </el-menu-item>
         </router-link>
-        <template v-for="(item,index) in items">
-          <el-submenu :index="item.path" :key="index" v-if="item.children">
+        <template v-for="(item) in items">
+          <el-submenu :index="item.path" :key="item.id" v-if="item.children">
             <template slot="title">
               <i :calss="'fa fa-margin '+ item.icon"></i>
               <span slot="title">{{item.name}}</span>
             </template>
           </el-submenu>
-          <router-link :key="cIndex" :to="cItem.path" v-for="(cItem,cIndex) in item.children">
+          <router-link :key="cItem.cId" :to="cItem.path" v-for="(cItem) in item.children">
             <el-menu-item :index="cItem.path">
               <span slot="title">{{cItem.name}}</span>
             </el-menu-item>
@@ -40,10 +40,12 @@ export default {
           v: 'fa-money',
           name: '资金管理',
           path: 'fund',
+          id: '_1',
           children: [
             {
-              path: 'fondList',
-              name: '资金流水'
+              path: 'fundList',
+              name: '资金流水',
+              id: 'child_1'
             }
           ]
         },
@@ -51,10 +53,12 @@ export default {
           icon: 'fa-asterisk',
           name: '信息管理',
           path: 'info',
+          id: '_2',
           children: [
             {
               path: 'infoShow',
-              name: '个人信息'
+              name: '个人信息',
+              id: 'child_1'
             }
           ]
         }

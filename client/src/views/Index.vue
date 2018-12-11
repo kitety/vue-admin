@@ -2,7 +2,9 @@
   <div class="index">
     <HeadNav></HeadNav>
     <LeftNav></LeftNav>
-    <router-view></router-view>
+    <div class="right-container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 <script>
@@ -20,4 +22,12 @@ export default {
 .index
   height 100%
   overflow hidden
+  .right-container
+    position relative
+    left 181px
+    top 0
+    width-count=180px
+    height-count=71px
+    height 'calc(100% - %s)' % height-count
+    width 'calc(100% - %s)' % width-count
 </style>
