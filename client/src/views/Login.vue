@@ -75,10 +75,7 @@ export default {
           }).catch((err) => {
             console.dir(err)
             // 注册失败
-            this.$message({
-              message: '账号登录失败',
-              type: 'danger'
-            })
+            this.$message.error('账号登录失败')
             this.$router.push('/login')
           })
         } else {

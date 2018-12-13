@@ -1,6 +1,6 @@
 <template>
   <div class="dialog">
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogp.show" title="资金添加">
+    <el-dialog :close-on-click-modal="false" :title="dialogp.title" :visible.sync="dialogp.show">
       <div class="form">
         <el-form
           :model="formData"
@@ -19,8 +19,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="收支描述" prop="descript">
-            <el-input type="text" v-model="formData.descript"></el-input>
+          <el-form-item label="收支描述" prop="describe">
+            <el-input type="text" v-model="formData.describe"></el-input>
           </el-form-item>
           <el-form-item label="收入" prop="income">
             <el-input type="number" v-model="formData.income"></el-input>
@@ -48,20 +48,11 @@ export default {
   name: 'dialogBox',
   data () {
     return {
-      formData: {
-        type: '',
-        descript: '',
-        income: '',
-        expend: '',
-        cash: '',
-        remark: '',
-        id: ''
-      },
       formatType: [
         '提现', '提现手续费', '充值'
       ],
       form_rules: {
-        descript: [{ required: true, message: '描述不能为空', trigger: 'blur' }],
+        describe: [{ required: true, message: '描述不能为空', trigger: 'blur' }],
         income: [{ required: true, message: '收入不能为空', trigger: 'blur' }],
         expend: [{ required: true, message: '支出不能为空', trigger: 'blur' }],
         cash: [{ required: true, message: '零钱不能为空', trigger: 'blur' }]
@@ -69,28 +60,49 @@ export default {
     }
   },
   props: {
-    dialogp: Object
+    dialogp: Object,
+    formData: Object
   },
   methods: {
     onSubmit (form) {
-      this.$refs[form].validate(valid => {
-        if (valid) {
-          this.$axios.post('/api/profile/add', this.formData).then((result) => {
-            this.$message({
-              message: '添加成功',
-              type: 'success'
+      // debugger
+      if (this.dialogp.option === 'add') {
+        this.$refs[form].validate(valid => {
+          if (valid) {
+            this.$axios.post('/api/profile/add', this.formData).then((result) => {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.$emit('update')
+            }).catch(() => {
+              this.$message.error('添加失败')
+            }).finally(() => {
+              this.dialogp.show = false
             })
-            this.$emit('update')
-          }).catch(() => {
-            this.$message({
-              message: '添加失败',
-              type: 'danger'
+          } else {
+            this.$message.error('请输入完整的信息')
+          }
+        })
+      } else {
+        this.$refs[form].validate(valid => {
+          if (valid) {
+            this.$axios.post('/api/profile/edit/' + this.formData.id, this.formData).then((result) => {
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              this.$emit('update')
+            }).catch(() => {
+              this.$message.error('修改失败')
+            }).finally(() => {
+              this.dialogp.show = false
             })
-          }).finally(() => {
-            this.dialogp.show = false
-          })
-        }
-      })
+          } else {
+            this.$message.error('请输入完整的信息')
+          }
+        })
+      }
     }
   }
 }

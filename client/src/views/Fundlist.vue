@@ -11,7 +11,7 @@
       <el-table
         :data="tableData"
         border
-        max-height="400px"
+        max-height="350px"
         style="width: 100%"
         v-if="tableData.length>0"
       >
@@ -53,7 +53,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <Dialog :dialogp="dialog" @update="getProfile"/>
+    <Dialog :dialogp="dialog" :formData="formData" @update="getProfile"/>
   </div>
 </template>
 <script>
@@ -62,9 +62,20 @@ export default {
   name: 'Fundlist',
   data () {
     return {
+      formData: {
+        type: '',
+        describe: '',
+        income: '',
+        expend: '',
+        cash: '',
+        remark: '',
+        id: ''
+      },
       tableData: [],
       dialog: {
-        show: false
+        show: false,
+        title: '',
+        option: ''
       }
     }
   },
@@ -81,13 +92,47 @@ export default {
       })
     },
     handleEdit (index, row) {
-      console.log('handleEdit')
+      this.formData = {
+        type: row.type,
+        describe: row.describe,
+        income: row.income,
+        expend: row.expend,
+        cash: row.cash,
+        remark: row.remark,
+        id: row._id
+      }
+      this.dialog = {
+        show: true,
+        title: '修改资金信息',
+        option: 'edit'
+      }
     },
     handleDelete (index, row) {
-      console.log('handleDelete')
+      this.$axios.delete('/api/profile/delete/' + row._id).then((result) => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getProfile()
+      }).catch(() => {
+        this.$message.error('删除失败')
+      })
     },
     handleAdd () {
-      this.dialog.show = true
+      this.formData = {
+        type: '',
+        describe: '',
+        income: '',
+        expend: '',
+        cash: '',
+        remark: '',
+        id: ''
+      }
+      this.dialog = {
+        show: true,
+        title: '添加资金信息',
+        option: 'add'
+      }
     }
   },
   components: {

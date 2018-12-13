@@ -32,7 +32,9 @@
             <el-button @click="submitForm('rigisterForm')" class="submit-btn" type="primary">注册</el-button>
           </el-form-item>
           <div class="tiparea">
-            <p>已经有账号?现在<router-link to="/login">登录</router-link></p>
+            <p>已经有账号?现在
+              <router-link to="/login">登录</router-link>
+            </p>
           </div>
         </el-form>
       </div>
@@ -92,10 +94,7 @@ export default {
             this.$router.push('/login')
           }).catch(() => {
             // 注册失败
-            this.$message({
-              message: '账号注册失败',
-              type: 'danger'
-            })
+            this.$message.error('账号登注册失败')
             this.$router.push('/register')
           })
         } else {
