@@ -53,7 +53,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <Dialog :dialogp="dialog"/>
+    <Dialog :dialogp="dialog" @update="getProfile"/>
   </div>
 </template>
 <script>
