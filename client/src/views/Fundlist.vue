@@ -52,6 +52,22 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-row>
+        <el-col :span="24">
+          <div class="pagination">
+            <el-pagination
+              :current-page.sync="paginations.pageIndex"
+              :page-size="paginations.pageSize"
+              :page-sizes="paginations.pageSizes"
+              :total="paginations.total"
+              @current-change="handleCurrentChange"
+              @size-change="handleSizeChange"
+              layout="paginations.layout"
+            ></el-pagination>
+          </div>
+        </el-col>
+      </el-row>
     </div>
     <Dialog :dialogp="dialog" :formData="formData" @update="getProfile"/>
   </div>
@@ -76,6 +92,13 @@ export default {
         show: false,
         title: '',
         option: ''
+      },
+      paginations: {
+        pageIndex: 1,
+        total: 0,
+        pageSize: 5, // 初始
+        pageSizes: [5, 10, 20, 40], // 修改
+        layout: 'total,size,prev,pager,next,jumper'
       }
     }
   },
@@ -133,7 +156,9 @@ export default {
         title: '添加资金信息',
         option: 'add'
       }
-    }
+    },
+    handleCurrentChange () { },
+    handleSizeChange () { }
   },
   components: {
     Dialog
