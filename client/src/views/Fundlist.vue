@@ -1,9 +1,16 @@
 <template>
   <div class="fill-container">
     <div>
-      <el-form :inline="true" ref="add_data">
-        <el-form-item class="btn-right">
-          <el-button @click="handleAdd" icon="view" size="mini" type="primary">添加</el-button>
+      <el-form :inline="true" :model="searchData" ref="add_data">
+        <el-form-item label="按照时间筛选:">
+          <el-date-picker placeholder="选择开始时间" type="datetime" v-model="searchData.beginTime"></el-date-picker>--
+          <el-date-picker placeholder="选择结束时间" type="datetime" v-model="searchData.endTime"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="handleSearch" icon="search" size="small" type="primary">筛选</el-button>
+        </el-form-item>
+        <el-form-item class="btn-right" v-if="user.identity==='manager'">
+          <el-button @click="handleAdd" icon="view" size="small" type="primary">添加</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -40,7 +47,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="备注" prop="remark" width="220"></el-table-column>
-        <el-table-column align="center" label="操作" prop="operation">
+        <el-table-column align="center" label="操作" prop="operation" v-if="user.identity==='manager'">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)" icon="edit" size="mini">编辑</el-button>
             <el-button
@@ -78,6 +85,10 @@ export default {
   name: 'Fundlist',
   data () {
     return {
+      searchData: {
+        beginTime: '',
+        endTime: ''
+      },
       formData: {
         type: '',
         describe: '',
@@ -88,6 +99,7 @@ export default {
         id: ''
       },
       tableData: [],
+      tableFilterData: [],
       allTableData: [],
       dialog: {
         show: false,
@@ -105,6 +117,11 @@ export default {
   },
   created () {
     this.getProfile()
+  },
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
   },
   methods: {
     getProfile () {
@@ -179,6 +196,20 @@ export default {
       this.tableData = this.allTableData.filter((item, index) => {
         return index < this.paginations.pageSize
       })
+    },
+    handleSearch () {
+      if (this.searchData.beginTime && this.searchData.endTime) {
+        let beginTime = this.searchData.beginTime.getTime()
+        let endTime = this.searchData.endTime.getTime()
+        this.allTableData = this.tableFilterData.filter(item => {
+          let itemTime = new Date(item.date).getTime()
+          return itemTime >= beginTime && endTime >= itemTime
+        })
+        this.setPagination()
+      } else {
+        this.getProfile()
+        this.$message.error('请先选择正确的时间！')
+      }
     }
   },
   components: {
