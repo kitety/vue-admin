@@ -58,12 +58,12 @@
           <div class="pagination">
             <el-pagination
               :current-page.sync="paginations.pageIndex"
+              :layout="paginations.layout"
               :page-size="paginations.pageSize"
               :page-sizes="paginations.pageSizes"
               :total="paginations.total"
               @current-change="handleCurrentChange"
               @size-change="handleSizeChange"
-              layout="paginations.layout"
             ></el-pagination>
           </div>
         </el-col>
@@ -94,11 +94,11 @@ export default {
         option: ''
       },
       paginations: {
-        pageIndex: 1,
-        total: 0,
+        pageIndex: 3,
+        total: 10,
         pageSize: 5, // 初始
         pageSizes: [5, 10, 20, 40], // 修改
-        layout: 'total,size,prev,pager,next,jumper'
+        layout: 'total, sizes, prev, pager, next, jumper'
       }
     }
   },
@@ -157,8 +157,12 @@ export default {
         option: 'add'
       }
     },
-    handleCurrentChange () { },
-    handleSizeChange () { }
+    handleCurrentChange (page) {
+      console.log(page)
+    },
+    handleSizeChange (page) {
+      console.log(page)
+    }
   },
   components: {
     Dialog
@@ -172,4 +176,7 @@ export default {
   box-sizing border-box
   .btn-right
     float right
+  .pagination
+    text-align right
+    margin 10px
 </style>
