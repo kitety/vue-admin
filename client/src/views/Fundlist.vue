@@ -11,7 +11,7 @@
       <el-table
         :data="tableData"
         border
-        max-height="350px"
+        max-height="350"
         style="width: 100%"
         v-if="tableData.length>0"
       >
@@ -88,14 +88,15 @@ export default {
         id: ''
       },
       tableData: [],
+      allTableData: [],
       dialog: {
         show: false,
         title: '',
         option: ''
       },
       paginations: {
-        pageIndex: 3,
-        total: 10,
+        pageIndex: 1,
+        total: 0,
         pageSize: 5, // 初始
         pageSizes: [5, 10, 20, 40], // 修改
         layout: 'total, sizes, prev, pager, next, jumper'
@@ -109,7 +110,9 @@ export default {
     getProfile () {
       // 获取表格数据
       this.$axios.get('/api/profile').then(res => {
-        this.tableData = res.data
+        this.allTableData = res.data
+        // 设置分页数据
+        this.setPagination()
       }).catch(err => {
         console.log(err)
       })
@@ -158,10 +161,24 @@ export default {
       }
     },
     handleCurrentChange (page) {
-      console.log(page)
+      this.tableData = this.allTableData.filter((item, index) => {
+        return (index >= this.paginations.pageSize * (page - 1)) && (index < this.paginations.pageSize * page)
+      })
     },
     handleSizeChange (page) {
-      console.log(page)
+      this.paginations.pageIndex = 1
+      this.paginations.pageSize = page
+      this.tableData = this.allTableData.filter((item, index) => {
+        return index < this.paginations.pageSize
+      })
+    },
+    setPagination () {
+      // 分页属性
+      this.paginations.total = this.allTableData.length
+      // 设置默认分页数据
+      this.tableData = this.allTableData.filter((item, index) => {
+        return index < this.paginations.pageSize
+      })
     }
   },
   components: {
